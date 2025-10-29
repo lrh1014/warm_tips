@@ -8,26 +8,99 @@
   body {
     margin: 0;
     overflow: hidden;
-    background: #fffafc;
     font-family: "微软雅黑", sans-serif;
+    background: linear-gradient(120deg, #ffe6f0, #e6f7ff, #fffbe6);
+    background-size: 600% 600%;
+    animation: bgMove 15s ease infinite;
   }
+
+  @keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* 页面开头提示 */
+  .welcome {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    font-weight: bold;
+    color: #ff4d88;
+    background: rgba(255,255,255,0.8);
+    padding: 20px 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: fadeOut 3s ease forwards;
+    animation-delay: 2s;
+    z-index: 9999;
+  }
+
+  @keyframes fadeOut {
+    to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  }
+
   .tip {
     position: absolute;
     padding: 12px 20px;
     border-radius: 15px;
     color: #333;
     font-size: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    animation: fadeInOut 6s ease forwards;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    animation: fadeInOut 6s ease forwards, floaty 3s ease-in-out infinite;
   }
+
   @keyframes fadeInOut {
     0% { opacity: 0; transform: scale(0.8); }
     10%, 80% { opacity: 1; transform: scale(1); }
     100% { opacity: 0; transform: scale(0.8); }
   }
+
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* 背景星星 */
+  .star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle 2s infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.2; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* 飘落樱花瓣 */
+  .petal {
+    position: absolute;
+    top: -50px;
+    color: pink;
+    font-size: 20px;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(360deg);
+      opacity: 0.5;
+    }
+  }
 </style>
 </head>
 <body>
+
+<div class="welcome">麻函薇你是最棒的</div>
 
 <script>
 const tips = [
@@ -43,23 +116,89 @@ const colors = [
   'plum','coral','bisque','aquamarine','mistyrose','honeydew','lavenderblush','oldlace'
 ];
 
+// 显示提示气泡（一次生成多个，大小随机）
 function showTip() {
-  const tip = document.createElement('div');
-  tip.className = 'tip';
-  tip.innerText = tips[Math.floor(Math.random() * tips.length)];
-  tip.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+  const count = 2 + Math.floor(Math.random() * 2); // 每次生成 2~3 个
+  for (let i = 0; i < count; i++) {
+    const tip = document.createElement('div');
+    tip.className = 'tip';
+    tip.innerText = tips[Math.floor(Math.random() * tips.length)];
+    tip.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-  const x = Math.random() * (window.innerWidth - 250);
-  const y = Math.random() * (window.innerHeight - 80);
-  tip.style.left = `${x}px`;
-  tip.style.top = `${y}px`;
+    // 随机大小
+    const size = 14 + Math.random() * 14; 
+    tip.style.fontSize = size + 'px';
+    tip.style.padding = (8 + Math.random() * 10) + 'px ' + (15 + Math.random() * 15) + 'px';
 
-  document.body.appendChild(tip);
-  setTimeout(() => tip.remove(), 6000);
+    const x = Math.random() * (window.innerWidth - 250);
+    const y = Math.random() * (window.innerHeight - 80);
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+
+    document.body.appendChild(tip);
+    setTimeout(() => tip.remove(), 6000);
+  }
 }
 
-// 每 0.8 秒随机出现一个提示
-setInterval(showTip, 800);
+// 每 0.4 秒生成一批气泡
+setInterval(showTip, 400);
+
+// 生成背景星星
+for (let i = 0; i < 50; i++) {
+  const star = document.createElement('div');
+  star.className = 'star';
+  star.style.left = Math.random() * window.innerWidth + 'px';
+  star.style.top = Math.random() * window.innerHeight + 'px';
+  star.style.animationDuration = (1 + Math.random() * 3) + 's';
+  document.body.appendChild(star);
+}
+
+// 点击时生成爱心/花瓣
+document.addEventListener('click', function(e) {
+  const symbols = ['❤️','💖','🌸','🌹','💐','✨'];
+  const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+
+  const el = document.createElement('div');
+  el.textContent = symbol;
+  el.style.position = 'absolute';
+  el.style.left = e.pageX + 'px';
+  el.style.top = e.pageY + 'px';
+  el.style.fontSize = (20 + Math.random() * 20) + 'px';
+  el.style.pointerEvents = 'none';
+  el.style.opacity = 1;
+  el.style.transform = `rotate(${Math.random()*360}deg)`;
+  el.style.transition = 'all 1.5s ease-out';
+
+  document.body.appendChild(el);
+
+  setTimeout(() => {
+    el.style.top = (e.pageY - 100 - Math.random()*50) + 'px';
+    el.style.opacity = 0;
+    el.style.transform += ' scale(1.5)';
+  }, 50);
+
+  setTimeout(() => el.remove(), 1600);
+});
+
+// 自动生成樱花瓣
+function createPetal() {
+  const petal = document.createElement('div');
+  petal.className = 'petal';
+  petal.innerText = '🌸';
+
+  petal.style.left = Math.random() * window.innerWidth + 'px';
+  petal.style.fontSize = (16 + Math.random() * 14) + 'px';
+
+  const duration = 5 + Math.random() * 5;
+  petal.style.animationDuration = duration + 's';
+  petal.style.transform = `rotate(${Math.random()*360}deg)`;
+
+  document.body.appendChild(petal);
+
+  setTimeout(() => petal.remove(), duration * 1000);
+}
+
+setInterval(createPetal, 300);
 </script>
 
 </body>
