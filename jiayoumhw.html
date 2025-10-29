@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>温馨提示</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #fffafc;
+    font-family: "微软雅黑", sans-serif;
+  }
+  .tip {
+    position: absolute;
+    padding: 12px 20px;
+    border-radius: 15px;
+    color: #333;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    animation: fadeInOut 6s ease forwards;
+  }
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.8); }
+    10%, 80% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.8); }
+  }
+</style>
+</head>
+<body>
+
+<script>
+const tips = [
+  '多喝水哦~', '保持微笑呀', '每天都要元气满满',
+  '我会帮你赶跑不开心', '保持好心情', '好好爱自己', '你是最棒的！！！',
+  '梦想成真', '期待下一次见面', '要自信呀',
+  '顺顺利利', '早点休息', '愿所有烦恼都消失',
+  '别熬夜', '今天过得开心嘛', '天冷了，多穿衣服'
+];
+
+const colors = [
+  'lightpink','skyblue','lightgreen','lavender','lightyellow',
+  'plum','coral','bisque','aquamarine','mistyrose','honeydew','lavenderblush','oldlace'
+];
+
+function showTip() {
+  const tip = document.createElement('div');
+  tip.className = 'tip';
+  tip.innerText = tips[Math.floor(Math.random() * tips.length)];
+  tip.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+  const x = Math.random() * (window.innerWidth - 250);
+  const y = Math.random() * (window.innerHeight - 80);
+  tip.style.left = `${x}px`;
+  tip.style.top = `${y}px`;
+
+  document.body.appendChild(tip);
+  setTimeout(() => tip.remove(), 6000);
+}
+
+// 每 0.8 秒随机出现一个提示
+setInterval(showTip, 800);
+</script>
+
+</body>
+</html>
