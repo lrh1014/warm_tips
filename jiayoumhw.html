@@ -10,9 +10,17 @@
     min-height: 100vh;
     overflow: hidden;
     font-family: "微软雅黑", sans-serif;
-    /* 背景壁纸（去掉 fixed，避免手机端缩放问题） */
+    /* 默认背景：PC 端 */
     background: url("wallpaper.jpg") no-repeat center center;
     background-size: cover;
+  }
+
+  /* 针对手机端（屏幕宽度小于等于 768px） */
+  @media (max-width: 768px) {
+    body {
+      background: url("wallpaper_mobile.jpg") no-repeat center center;
+      background-size: 100% 100%; /* 让壁纸和手机屏幕一样大 */
+    }
   }
 
   /* 页面开头提示 */
